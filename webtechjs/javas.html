@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Számkitaláló Játék</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        input, button { margin: 10px; padding: 10px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>Számkitaláló Játék</h1>
+    <p>Adj meg egy számot 0 és 100 között:</p>
+    <input type="number" id="userGuess" min="0" max="100">
+    <button onclick="makeGuess()">Tipp</button>
+    <p id="feedback"></p>
+
+    <script>
+        const targetNumber = Math.floor(Math.random() * 101);
+        const maxAttempts = 20;
+        let attempts = 0;
+
+        function makeGuess() {
+            const userGuess = parseInt(document.getElementById("userGuess").value, 10);
+            const feedback = document.getElementById("feedback");
+            attempts++;
+
+            if (isNaN(userGuess) || userGuess < 0 || userGuess > 100) {
+                feedback.textContent = "Érvénytelen bemenet. Próbáld újra egy szám megadásával!";
+                attempts--;
+                return;
+            }
+
+            if (userGuess === targetNumber) {
+                feedback.textContent = `Gratulálok, ${attempts} lépésből eltaláltad!`;
+                disableInput();
+            } else if (userGuess > targetNumber) {
+                feedback.textContent = `${attempts}. tipp nem talált: A megoldás kisebb.`;
+            } else {
+                feedback.textContent = `${attempts}. tipp nem talált: A megoldás nagyobb.`;
+            }
+
+            if (attempts >= maxAttempts) {
+                feedback.textContent = "Sajnos ez most nem sikerült!";
+                disableInput();
+            }
+        }
+
+        function disableInput() {
+            document.getElementById("userGuess").disabled = true;
+        }
+    </script>
+</body>
+</html>
