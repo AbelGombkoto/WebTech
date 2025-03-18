@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Állatok és Teendők</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .todo-container {
+            margin-top: 20px;
+        }
+        .todo-list li {
+            cursor: pointer;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: grey;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#dog">Kutya</a>
+        <a href="#cat">Macska</a>
+    </nav>
+    
+    <div class="container">
+        <div id="dog" class="card">
+            <h2 id="dog-name"></h2>
+            <img id="dog-image" src="" alt="Kutya képe" width="300">
+            <div id="dog-description"></div>
+            <h3>Érdekességek:</h3>
+            <ul id="dog-facts"></ul>
+        </div>
+        
+        <div id="cat" class="card">
+            <h2 id="cat-name"></h2>
+            <img id="cat-image" src="" alt="Macska képe" width="300">
+            <div id="cat-description"></div>
+            <h3>Érdekességek:</h3>
+            <ul id="cat-facts"></ul>
+        </div>
+    </div>
+    
+    <div class="container todo-container">
+        <h2>Teendőlista</h2>
+        <input type="text" id="todo-input" placeholder="Írj be egy teendőt...">
+        <button class="btn btn-primary" id="add-todo">Hozzáadás</button>
+        <ul id="todo-list" class="todo-list"></ul>
+    </div>
+    
+    <footer class="footer">Forrás: Wikipédia</footer>
+    
+    <script src="data.js"></script>
+    <script>
+        function populateAnimalInfo(animal, prefix) {
+            document.getElementById(`${prefix}-name`).textContent = animal.name;
+            document.getElementById(`${prefix}-image`).src = animal.imageUrl;
+            document.getElementById(`${prefix}-description`).innerHTML = animal.descriptionHtml;
+            
+            const factsList = document.getElementById(`${prefix}-facts`);
+            animal.funFacts.forEach(fact => {
+                const li = document.createElement('li');
+                li.textContent = fact;
+                factsList.appendChild(li);
+            });
+        }
+        
+        populateAnimalInfo(DOG_INFO, 'dog');
+        populateAnimalInfo(CAT_INFO, 'cat');
+        
+        document.getElementById('add-todo').addEventListener('click', function() {
+            const input = document.getElementById('todo-input');
+            const text = input.value.trim();
+            if (text !== "") {
+                const li = document.createElement('li');
+                li.textContent = text;
+                li.addEventListener('click', function() {
+                    this.classList.toggle('completed');
+                });
+                document.getElementById('todo-list').appendChild(li);
+                input.value = "";
+            }
+        });
+    </script>
+</body>
+</html>
