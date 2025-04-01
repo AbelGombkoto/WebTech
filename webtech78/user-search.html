@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felhasználó keresés</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .user-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .user-item { text-align: center; }
+        .user-item img { border-radius: 50%; width: 50px; height: 50px; }
+    </style>
+</head>
+<body>
+    <h1>GitHub Felhasználó Keresés</h1>
+    <script src="app.js"></script>
+    <input type="text" id="searchInput" placeholder="Felhasználónév">
+    <button id="search-btn" class="btn btn-primary" onclick="searchUser()">Keresés</button>
+    
+    <div id="results" class="user-list"></div>
+    
+    <script>
+        async function searchUser() {
+            const query = document.getElementById("searchInput").value.trim();
+            if (!query) {
+                alert("A keresőkifejezés nem lehet üres!");
+                return;
+            }
+            
+            const response = await fetch(`https://api.github.com/search/users?q=${query}`);
+            const data = await response.json();
+            
+            const resultsContainer = document.getElementById("results");
+            resultsContainer.innerHTML = "";
+            
+            data.items.forEach(user => {
+                const userElement = document.createElement("div");
+                userElement.classList.add("user-item");
+                userElement.innerHTML = `
+                    <img src="${user.avatar_url}" alt="${user.login}">
+                    <p>${user.login}</p>
+                `;
+                resultsContainer.appendChild(userElement);
+            });
+        }
+    </script>
+</body>
+</html>
