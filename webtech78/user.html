@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felhasználó Adatlap</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get("id");
+            if (!userId) {
+                document.body.innerHTML = "<h2>Hiba: nincs megadva felhasználói azonosító.</h2>";
+                return;
+            }
+            
+            try {
+                const response = await fetch(`https://api.github.com/users/${userId}`);
+                if (!response.ok) {
+                    throw new Error("Nem sikerült lekérni az adatokat.");
+                }
+                const user = await response.json();
+                
+                let content = `<div style='text-align: center;'>`;
+                if (user.avatar_url) content += `<img src="${user.avatar_url}" alt="${user.name}" style="border-radius: 50%; width: 150px; height: 150px;">`;
+                if (user.name) content += `<h2>${user.name}</h2>`;
+                if (user.bio) content += `<p><strong>Bemutatkozás:</strong> ${user.bio}</p>`;
+                if (user.location) content += `<p><strong>Hely:</strong> ${user.location}</p>`;
+                if (user.blog) content += `<p><strong>Blog:</strong> <a href="${user.blog}" target="_blank">${user.blog}</a></p>`;
+                if (user.public_repos) content += `<p><strong>Nyilvános repók:</strong> ${user.public_repos}</p>`;
+                if (user.followers) content += `<p><strong>Követők:</strong> ${user.followers}</p>`;
+                content += `</div>`;
+                
+                document.body.innerHTML = content;
+            } catch (error) {
+                document.body.innerHTML = `<h2>Hiba történt: ${error.message}</h2>`;
+            }
+        });
+    </script>
+</body>
+</html>
